@@ -1,4 +1,6 @@
-# Repository for final project
+# Repository for an Emotion Detection AI Tool
+
+Made using NLP library for Emotion Analysis function of the WatsonAI NLP Library
 
 Please consider the below factors while contributing
 
