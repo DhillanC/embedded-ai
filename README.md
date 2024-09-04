@@ -2,22 +2,16 @@
 
 Made using NLP library for Emotion Analysis function of the WatsonAI NLP Library
 
-Please consider the below factors while contributing
+## Sequence Diagram:
 
-Code Style:
-Maintain a consistent code style for readability.
+```mermaid
 
-Documentation:
-Ensure well-documented code for effective collaboration.
-
-Testing:
-Thoroughly test your changes before submitting a pull request.
-
-Issue Tracker:
-Check the Issue Tracker for tasks.
-
-Code Review:
-All contributions undergo a code review process.
-
-Licensing:
-Contributions are licensed.
+sequenceDiagram
+    participant User
+    participant FlaskApp
+    participant WatsonNLP_API
+    
+    User->>FlaskApp: Submit text to analyze
+    FlaskApp->>WatsonNLP_API: Send text for emotion detection
+    WatsonNLP_API-->>FlaskApp: Return emotion analysis result
+    FlaskApp-->>User: Display detected emotions and dominant emotion

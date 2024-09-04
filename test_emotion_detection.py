@@ -1,14 +1,17 @@
 """ Unit test file for EmotionDetection package"""
 import unittest
-from Emotion_Detection.emotion_detection import emotion_detector
-
+from unittest.mock import patch
+from emotion_detection.emotion_detection import emotion_detector
 
 class TestEmotionDetection(unittest.TestCase):
     """Test cases for the emotion_detector function."""
+
     def test_joy_emotion_detector(self):
         """Test case for joy emotion"""
-        result_1 = emotion_detector('I am glad this happened')
-        self.assertEqual(result_1['dominant_emotion'], 'joy')
+        # Call the emotion detector function with a joyful text
+        result = emotion_detector('I am glad this happened')
+        # Assert that the dominant emotion is 'joy'
+        self.assertEqual(result['dominant_emotion'], 'joy')
 
     def test_anger_emotion_detector(self):
         """Test case for anger emotion"""
@@ -29,5 +32,33 @@ class TestEmotionDetection(unittest.TestCase):
         """Test case for fear emotion"""
         result_5 = emotion_detector('I am really afraid that this will happen')
         self.assertEqual(result_5['dominant_emotion'], 'fear')
+
+    def test_empty_text(self):
+        """Test case for an empty text."""
+        # No need to mock a response since no request will be made for empty text
+        result = emotion_detector('')
+
+        # Assert that the dominant emotion and all emotions are None
+        self.assertEqual(result['dominant_emotion'], None)
+        self.assertEqual(result['joy'], None)
+
+    @patch('Emotion_Detection.emotion_detection.requests.post')
+    def test_mock_joy_emotion_detector(self, mock_post):
+        """Mock test case for joy emotion"""
+        # Mocking the API response for joy
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            'emotionPredictions': [
+                {'emotion': {'joy': 0.9, 'anger': 0.05, 'disgust': 0.02, 'fear': 0.02, 'sadness': 0.01}}
+            ]
+        }
+        # Call the emotion detector function with a joyful text
+        result = emotion_detector('I am glad this happened')
+
+        # Assert that the dominant emotion is 'joy'
+        self.assertEqual(result['dominant_emotion'], 'joy')
+
+        # Assert that the joy score is correct
+        self.assertAlmostEqual(result['joy'], 0.9)
 
 unittest.main()

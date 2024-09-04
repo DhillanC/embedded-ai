@@ -5,7 +5,7 @@
 # Import Flask, render_template, request from the flask framework package
 from flask import Flask, render_template, request
 # Import the emotion analysis function from the package created
-from Emotion_Detection.emotion_detection import emotion_detector
+from emotion_detection.emotion_detection import emotion_detector
 
 #Initiate the flask app
 app = Flask("Emotion Detector")
@@ -19,14 +19,18 @@ def sent_analyzer():
     # Retrieve the text to analyze from the request arguments
     text_to_analyze = request.args.get('textToAnalyze')
 
+    if not text_to_analyze:
+        return "Invalid text! Please try again!"
+
     # Pass the text to the emotion_detector function and store the response
     response = emotion_detector(text_to_analyze)
 
     # Extract the dominant emotion and score from the response
     dominant_emotion = response.get('dominant_emotion', 'UNKNOWN')
+    
     if dominant_emotion is None:
         # Return a specific message if dominant_emotion is None
-        return "Invalid text! Please try again!"
+        return "No emotions could be detected. Please try again with more descriptive text"
 
     # Return a formatted string with the sentiment label and score
     return f"The emotions detected are {response}. The dominant emotion is {dominant_emotion}"
@@ -39,4 +43,4 @@ def render_index_page():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True,)
